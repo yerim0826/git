@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thumeleaf/layout"
+      layout:decorate="~{layouts/mylayout}">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+<!-- 사용자 정의 자바 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    $(document).ready(function(){
+      $('#searchButton').on('click', function(event){
+        event.preventDefault(); /* 이벤트 전파 방지 효과 */
+        gotoPage(0) ; /* 시작하자마자 1페이지로 이동하기 */
+      });
+    });
+
+    function gotoPage(page){
+      /* 해당 태그에는 field 이름을 속성 값으로 하는 id 속성이 자동으로 만들어 집니다. */
+      var searchDateType = $("#searchDateType").val();
+      var productStatus = $("#productStatus").val();
+      var searchBy = $("#searchBy").val();
+      var searchQuery = $("#searchQuery").val();
+
+      location.href="/admin/products/" + page + "?searchDateType=" + searchDateType
+      + "&productStatus=" + productStatus
+      + "&searchBy=" + searchBy
+      + "&searchQuery=" + searchQuery;
+    }
+
+        </script>
+</th:block>
+
+<!-- 사용자 정의 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+    select{margin-right:10px;}
+  </style>
+</th:block>
+
+<div class="content" layout:fragment="content">
+  <form role="form" method="get" th:object="${products}"
+    th:action="@{'/admin/products/'+${products.number}}" >
+
+    <table class="table">
+      <thead>
+      <tr>
+        <td>상품 아이디</td>
+        <td>상품명</td>
+        <td>상태</td>
+        <td>등록자</td>
+        <td>등록일</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="bean:${products.getContent()}">
+        <td th:text="${bean.id}"></td>
+        <td>
+          <a th:href="'/admin/products/'+${bean.id}" th:text="${bean.name}"></a>
+        </td>
+        <td th:text="${bean.productStatus==T(com.shopping.constant.ProductStatus).SELL} ? '판매중' : '품절'"></td>
+        <td th:text="${bean.createdBy}"></td>
+        <td th:text="${bean.regDate}"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!--/* 하단 페이징 영역 */-->
+    <div th:with="start=${(products.number/maxPage)*maxPage+1}, end=(${(products.totalPages==0) ? 1 : (start + (maxPage-1) < products.totalPages ? start + (maxPage-1) : products.totalPages)})">
+      <ul class="pagination justify-content-center">
+        <!--/* Previous */-->
+        <li class="page-item" th:classappend="${products.first}?'disabled'">
+          <a th:onclick="'javascript:gotoPage('+${products.number-1}+')'" aria-label='Previous' class="page-link">
+            <span aria-hidden='true'>Previous</span>
+          </a>
+        </li>
+
+        <!--/* 숫자 반복 영역 */-->
+        <li class="page-item" th:each="page:${#numbers.sequence(start, end)}" th:classappend="${products.number eq page-1}?'active':''">
+          <a th:onclick="'javascript:gotoPage('+ ${page-1}+')'" th:inline="text" class="page-link">[[${page}]]</a>
+        </li>
+
+        <!--/* Next */-->
+        <li class="page-item" th:classappend="${products.last}?'disabled'">
+          <a th:onclick="'javascript:gotoPage('+${products.number+1}+')'" aria-label='Next' class="page-link">
+            <span aria-hidden='true'>Next</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!--/* 필드 검색 옵션 */-->
+    <div class="form-inline justify-content-center" th:object="${searchDto}">
+      <select th:field="*{searchDataType}" class="form-control" style="width:auto;">
+        <option value="all">전체 기간</option>
+        <option value="1d">1일</option>
+        <option value="1w">1주</option>
+        <option value="1m">1개월</option>
+        <option value="6m">6개월</option>
+      </select>
+
+      <select th:field="*{productStatus}" class="form-control" style="width:auto;">
+        <option value="">전체</option>
+        <option value="SELL">판매중</option>
+        <option value="SOLD_OUT">품절</option>
+      </select>
+
+      <select th:field="*{searchBy}" class="form-control" style="width:auto;">
+        <option value="name">상품명</option>
+        <option value="createdBy">등록자</option>
+      </select>
+
+      <input th:field="*{searchQuery}" type="text" class="form-control"
+        placeholder="검색어를 입력해 주세요.">
+      &nbsp;&nbsp;&nbsp;
+      <button id="searchButton" type="submit" class="btn btn-primary">검색</button>
+    </div>
+
+  </form>
+</div>
+</html>

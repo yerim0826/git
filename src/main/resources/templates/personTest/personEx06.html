@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>thymeleaf 링크 처리 예제</h1>
+    <div>
+        <a th:href="@{/person/ex01}">예제 01번으로 이동하기</a>
+    </div>
+    <div>
+        <a th:href="@{https://www.naver.com/}">네이버 홈 페이지</a>
+    </div>
+    <div>
+        <a th:href="@{/person/ex07(su1=100,su2=200)}">예제 07번(파라미터 전달)</a>
+    </div>
+</body>
+</html>

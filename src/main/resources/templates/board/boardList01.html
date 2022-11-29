@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mylayout}">
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function(){
+        });
+    </script>
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+    </style>
+</th:block>
+
+<div class="content" layout:fragment="content">
+    <table class="table">
+        <thead>
+        <tr>
+            <td>글번호</td>
+            <td>작성자</td>
+            <td>글제목</td>
+            <td>글내용</td>
+            <td>수정</td>
+            <td>삭제</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board, status: ${list}">
+            <td th:text="${board.no}"></td>
+            <td>
+                <a th:href="'/board/detail/'+${board.no}" th:text="${board.writer}"></a>
+            </td>
+            <td th:text="${board.subject}"></td>
+            <td th:text="${board.description}"></td>
+            <td>
+                <a th:href="'/board/update/'+${board.no}" th:text="수정"></a>
+            </td>
+            <td>
+                <a th:href="'/board/delete/'+${board.no}" th:text="삭제"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <hr/>
+    <a th:href="'/board/insert'">
+        <button type="button" class="btn btn-primary">추가하기</button>
+    </a>
+</div>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>데이터 1개</h1>
+    <div>
+        이름 : <span th:text="${personDto.name}"></span>
+    </div>
+    <div>
+        나이 : <span th:text="${personDto.age}"></span>
+    </div>
+    <div>
+        주소 : <span th:text="${personDto.address}"></span>
+    </div>
+    <div>
+        성별 : <span th:text="${personDto.gender}"></span>
+    </div>
+</body>
+</html>

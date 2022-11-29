@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:replace="fragments/top::topfile"></div>
+    <div layout:fragment="nation"></div>
+    <div th:replace="fragments/bottom::bottomfile"></div>
+</body>
+</html>

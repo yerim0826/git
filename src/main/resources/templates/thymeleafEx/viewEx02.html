@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h3>상품 1개에 대한 예시</h3>
+    <div>
+        상품 이름 : <span th:text="${bean.name}"></span>
+    </div>
+    <div>
+        상세 설명 : <span th:text="${bean.description}"></span>
+    </div>
+    <div>
+        등록일 : <span th:text="${bean.regDate}"></span>
+    </div>
+    <div>
+        상품 가격 : <span th:text="${bean.price}"></span>
+    </div>
+</body>
+</html>

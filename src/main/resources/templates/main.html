@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mylayout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .carousel-inner > .product {
+            height: 350px;
+        }
+        .margin{
+            margin-bottom:30px;
+        }
+        .banner{
+            height: 300px;
+            position: absolute; top:0; left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .card-text{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        a:hover{
+            text-decoration:none;
+        }
+        .center{
+            text-align:center;
+        }
+    </style>
+</th:block>
+
+<div class="content" layout:fragment="content">
+
+    <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active product">
+
+               <img class="d-block w-100 banner" src="/images/products/ilsan.jpg" alt="First slide">
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="searchQuery" th:value="${searchDto.searchQuery}">
+    <div th:if="${not #strings.isEmpty(searchDto.searchQuery)}" class="center">
+        <p class="h3 font-weight-bold" th:text="${searchDto.searchQuery} + '검색 결과'"></p>
+    </div>
+
+    <div class="row">
+        <th:block th:each="bean, status: ${products.getContent()}">
+            <div class="col-md-4 margin">
+                <div class="card">
+                    <a th:href="'/product/' + ${bean.id}" class="text-dark">
+                        <!--<span th:text="${bean.imageUrl}"></span>-->
+                        <img th:src="${bean.imageUrl}" class="card-img-top" th:alt="${bean.name}" height="300" width="300">
+                        <div class="card-body">
+                            <h4 class="card-title">[[${bean.name}]]</h4>
+                            <p class="card-text">[[${bean.description}]]</p>
+                            <h3 class="card-title text-danger">
+                                <span th:text="${#numbers.formatInteger(bean.price, 0, 'COMMA')}" /> 원
+                            </h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+    <div th:with="start=${(products.number/maxPage)*maxPage + 1}, end=(${(products.totalPages == 0) ? 1 : (start + (maxPage - 1) < products.totalPages ? start + (maxPage - 1) : products.totalPages)})" >
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item" th:classappend="${products.number eq 0}?'disabled':''">
+                <a th:href="@{'/' + '?searchQuery=' + ${searchDto.searchQuery} + '&page=' + ${products.number-1}}" aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${products.number eq page-1}?'active':''">
+                <a th:href="@{'/' +'?searchQuery=' + ${searchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+            </li>
+
+            <li class="page-item" th:classappend="${products.number+1 ge products.totalPages}?'disabled':''">
+                <a th:href="@{'/' +'?searchQuery=' + ${searchDto.searchQuery} + '&page=' + ${products.number+1}}" aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+</div>
